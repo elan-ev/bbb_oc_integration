@@ -1,0 +1,22 @@
+---
+# 'bundle config unset deployment' is necessary to re-run
+# 'bundle install' and unlock the Gemfile
+- name: rerun gem bundle installer
+  ansible.builtin.command:
+    cmd: |
+      bundle config unset deployment
+      bundle install
+    chdir: /usr/local/bigbluebutton/core
+
+- name: restart bbb-rap-resque-worker
+  ansible.builtin.systemd:
+    name: bbb-rap-resque-worker.service
+    state: restarted
+
+- name: restart bbb-rap-starter
+  ansible.builtin.systemd:
+    name: bbb-rap-starter.service
+    state: restarted
+
+- name: restart bbb
+  ansible.builtin.command: bbb-conf --restart

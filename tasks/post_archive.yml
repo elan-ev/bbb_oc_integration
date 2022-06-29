@@ -1,0 +1,49 @@
+---
+- name: copy and configure processing files
+  block:
+    - name: copy files
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: "0644"
+      loop:
+        - src: opencast-bigbluebutton-integration/post-archive/post_archive.rb
+          dest: /usr/local/bigbluebutton/core/scripts/post_archive/post_archive.rb
+        - src: "opencast-bigbluebutton-integration/oc_modules/"
+          dest: "/usr/local/bigbluebutton/core/scripts/post_archive/oc_modules/"
+    - name: copy files
+      ansible.builtin.template:
+        src: post_archive_config.toml.j2
+        dest: /usr/local/bigbluebutton/core/scripts/post_archive/post_archive_config.toml
+        owner: root
+        group: root
+        mode: "0644"
+  notify:
+    - restart bbb-rap-starter
+    - restart bbb-rap-resque-worker
+
+- name: Check if presentation.rb exists
+  ansible.builtin.stat:
+    path: "/usr/local/bigbluebutton/core/scripts/process/presentation.rb"
+  register: presentation
+
+- name: disable process and publish steps of the recording workflow
+  ansible.builtin.command: bbb-record --disable presentation
+  when: bbb_oc_disable_bbb_presentation and presentation.stat.exists
+  notify: restart bbb
+
+- name: add gems to BBB core Gemfile
+  ansible.builtin.lineinfile:
+    path: /usr/local/bigbluebutton/core/Gemfile
+    regexp: |-
+      ^gem ["']{{ item }}["'].*
+    line: "gem '{{ item }}'"
+    insertbefore: "^group :test.*"
+  loop:
+    - rest-client
+    - streamio-ffmpeg
+    - toml-rb
+    - optimist
+  notify: rerun gem bundle installer

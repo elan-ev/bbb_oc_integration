@@ -1,0 +1,14 @@
+---
+
+galaxy_info:
+  author: Elan e.V.
+  role_name: bbb_opencast_integration
+  namespace: elan
+  description: Configures BigBlueButton to send recordings to Opencast
+  license: BSD-3-Clause
+  min_ansible_version: "2.9"
+  platforms:
+    - name: Ubuntu
+      versions:
+        - all
+dependencies: []

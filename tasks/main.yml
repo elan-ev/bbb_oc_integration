@@ -1,0 +1,31 @@
+---
+- name: install dependencies
+  ansible.builtin.apt:
+    update_cache: true
+    name:
+      - librsvg2-bin
+      - ruby-dev  # needed to re-run bundle install
+
+- name: allow post scripts to call bbb-record
+  ansible.builtin.lineinfile:
+    path: /etc/sudoers
+    regexp: "bigbluebutton ALL = NOPASSWD: /usr/bin/bbb-record"
+    line: "bigbluebutton ALL = NOPASSWD: /usr/bin/bbb-record"
+
+- name: configure BigBlueButton
+  ansible.builtin.lineinfile:
+    path: "/etc/bigbluebutton/bbb-web.properties"
+    regexp: |-
+      ^{{ item.key }}
+    line: "{{ item.key }}={{ item.value }}"
+  loop:
+    - key: autoStartRecording
+      value: "{{ bbb_oc_auto_start_recording | ternary('true', 'false') }}"
+    - key: allowStartStopRecording
+      value: "{{ bbb_oc_allow_start_stop_recording | ternary('true', 'false') }}"
+    - key: disableRecordingDefault
+      value: "{{ bbb_oc_disable_recording | ternary('true', 'false') }}"
+
+- name: install post archive scripts
+  ansible.builtin.include: post_archive.yml
+  when: bbb_oc_workflow == "post-archive"

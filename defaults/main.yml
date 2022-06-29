@@ -1,0 +1,159 @@
+---
+
+# * Required Variables *
+# ----------------------
+
+# Select a workflow (either 'post-archive' or 'post-publish')
+# bbb_oc_workflow: 'post-archive'
+
+# Server URL
+# bbb_oc_opencast_server: 'https://develop.opencast.org'
+
+# User credentials allowed to ingest via HTTP basic
+# bbb_oc_opencast_user: 'admin'
+# bbb_oc_opencast_password: 'password'
+
+
+# * Optional Variables *
+# ----------------------
+
+
+# * BigBlueButton Configuration *
+
+# Here you can disable the process and publish
+# steps of the recording workflow.
+# You _usually_ want to do this, if you use
+# the post-archive workflow, but not if
+# you use the post-publish workflow
+bbb_oc_disable_bbb_presentation: true
+
+# Control if users have the ability to start
+# and stop recording during the meeting.
+bbb_oc_allow_start_stop_recording: true
+
+# Automatically start recording at the beginning
+# of the meeting.
+# This can be helpful in automated settings,
+# but be aware of possible privacy issues.
+bbb_oc_auto_start_recording: false
+
+# This flag allows to switch on recordings
+# if by some other way they have been deactivated
+# in the past. You usually likely do not want this
+# variable to be set to 'true' if you use this integration.
+bbb_oc_disable_recording: false
+
+
+# * Opencast Configuration *
+
+# Workflow to use for ingest
+# try 'bbb-upload' for post_archive
+# and 'schedule-and-upload' for post_publish
+bbb_oc_opencast_workflow: 'bbb-upload'
+
+# Specify which additional files you want to send to Opencast
+
+# Send the webcam recordings to Opencast.
+# If your Opencast is any version earlier than 9.1, you MUST set this to false.
+# Default: true
+bbb_oc_webcam_tracks: true
+
+# Adds the shared notes etherpad from a meeting to the attachments in Opencast
+# Default: false
+bbb_oc_shared_notes_etherpad_as_attachment: false
+
+# Adds the shared notes as HTML from a meeting to the attachments in Opencast
+# Default: false
+bbb_oc_shared_notes_html_as_attachment: false
+
+# Adds the shared notes as PDF from a meeting to the attachments in Opencast
+# Default: false
+bbb_oc_shared_notes_pdf_as_attachment: false
+
+# Adds the public chat from a meeting to the attachments in Opencast as a subtitle file
+# Default: false
+bbb_oc_chat_as_subtitle_attachment: false
+
+# Add all uploaded presentations from a meeting to the attachments in Opencast as PDF files.
+# Please make sure to use this feature respectfully.
+# Default: false
+bbb_oc_presentations_as_pdf: false
+
+
+# * Cleanup *
+
+# If and how the script should delete raw recording files from BBB
+
+# Removes the raw recording data from BBB if the script sent all the data to Opencast successfully.
+# Set to false if there are other post_archive scripts after this one, or else they will
+# likely fail due to the missing data.
+# Although data will only ever be deleted after the script was successful and the first thing
+# Opencast does (in the bbb-upload Workflow) is to make a snapshot of all the data it got,
+# there may still be edge cases where data loss can occur. If you absolutely cannot accept
+# any data loss, set this option to false.
+# Default: true
+bbb_oc_delete_if_successful: true
+
+# Marks the raw recording data for deletion by the BBB clean-up cron job.
+# This will have no effect if the cron job is disabled.
+# This will have no effect if "deleteIfSuccessful" is set to true.
+# Default: false
+bbb_oc_delete_by_bbbcron: false
+
+
+# * Default Roles *
+
+# Allows you to add default Opencast roles to every recording
+
+# Default roles for the event, e.g. "ROLE_OAUTH_USER, ROLE_USER_BOB"
+# Default: ""
+bbb_oc_read_perm: ""
+bbb_oc_write_perm: ""
+
+# Default roles for the series, e.g. "ROLE_OAUTH_USER, ROLE_USER_BOB"
+# Default: ""
+bbb_oc_series_read_perm: ""
+bbb_oc_series_write_perm: ""
+
+
+# * Various other options *
+
+# Whether a new series should be created if the given one does not exist yet
+# Default: false
+bbb_oc_create_new_series_if_it_does_not_yet_exist: false
+
+# Whether to skip processing if no series ID was submitted as meeting metadata
+# Default: true
+bbb_oc_skip_processing_if_no_series_id_set: false
+
+# The given dublincore identifier will also passed to the dublincore source tag,
+# even if the given identifier cannot be used as the actual identifier for the vent
+# Default: false
+bbb_oc_pass_identifier_as_dc_source: false
+
+# Default: false
+bbb_oc_only_ingest_if_record_button_was_pressed: false
+
+# If a converted video already exists, don't overwrite it
+# This can save time when having to run this script on the same input multiple times
+# Default: false
+bbb_oc_do_not_convert_videos_again: false
+
+# Minimal accepted duration of recordings in seconds
+# This value can be used to discard recordings that are shorter than this value.
+# This can be helpful when dealing with a lot of short videos due to people peeking into
+# conferences before they start and that have set 'autoStartRecording' to 'true'.
+bbb_oc_minimal_duration: 0
+
+
+# * Monitoring *
+
+# Monitor Opencast workflow state after ingest to determine whether the workflow was successful.
+# EXPERIMENTIAL! This may cause the process spawned from this script to run a lot longer than anticipated.
+
+# Default: false
+bbb_oc_monitor_opencast_after_ingest: false
+# Time between each state check in seconds
+bbb_oc_seconds_between_checks: 300
+# Fail-safe. Time in seconds until the process is terminated no matter what.
+bbb_oc_seconds_until_give_up_max: 86400

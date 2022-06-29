@@ -1,0 +1,38 @@
+---
+- name: copy and configure processing files
+  block:
+    - name: copy files
+      ansible.builtin.copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: root
+        group: root
+        mode: "0644"
+      loop:
+        - src: opencast-bigbluebutton-integration/post-publish/post_publish.rb
+          dest: /usr/local/bigbluebutton/core/scripts/post_publish/post_publish.rb
+        - src: "opencast-bigbluebutton-integration/oc_modules/"
+          dest: "/usr/local/bigbluebutton/core/scripts/post_publish/oc_modules/"
+    - name: copy files
+      ansible.builtin.template:
+        src: post_publish_config.toml.j2
+        dest: /usr/local/bigbluebutton/core/scripts/post_publish/post_publish_config.toml
+        owner: root
+        group: root
+        mode: "0644"
+  notify:
+    - restart bbb-rap-starter
+    - restart bbb-rap-resque-worker
+
+- name: add gems to BBB core Gemfile
+  ansible.builtin.lineinfile:
+    path: /usr/local/bigbluebutton/core/Gemfile
+    regexp: |-
+      ^gem ["']{{ item }}["'].*
+    line: "gem '{{ item }}'"
+    insertbefore: "^group :test.*"
+  loop:
+    - rest-client
+    - shellwords
+    - optimist
+  notify: rerun gem bundle installer
