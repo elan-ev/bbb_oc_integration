@@ -14,6 +14,12 @@
 # bbb_oc_opencast_password: 'password'
 
 
+# * OC Integration Version *
+# --------------------------
+
+bbb_oc_version: HEAD
+
+
 # * Optional Variables *
 # ----------------------
 

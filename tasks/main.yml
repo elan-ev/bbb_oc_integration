@@ -26,6 +26,17 @@
     - key: disableRecordingDefault
       value: "{{ bbb_oc_disable_recording | ternary('true', 'false') }}"
 
+- name: download repository  # noqa: git-latest
+  ansible.builtin.git:
+    repo: https://github.com/elan-ev/opencast-bigbluebutton-integration.git
+    dest: /tmp/opencast-bigbluebutton-integration/
+    version: HEAD
+
 - name: install post archive scripts
   ansible.builtin.include: post_archive.yml
   when: bbb_oc_workflow == "post-archive"
+
+- name: clean up temp
+  ansible.builtin.file:
+    path: "/tmp/opencast-bigbluebutton-integration/"
+    state: absent

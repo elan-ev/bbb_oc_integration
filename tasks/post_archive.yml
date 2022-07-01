@@ -3,15 +3,16 @@
   block:
     - name: copy files
       ansible.builtin.copy:
+        remote_src: true
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
         owner: root
         group: root
         mode: "0644"
       loop:
-        - src: opencast-bigbluebutton-integration/post-archive/post_archive.rb
-          dest: /usr/local/bigbluebutton/core/scripts/post_archive/post_archive.rb
-        - src: "opencast-bigbluebutton-integration/oc_modules/"
+        - src: "/tmp/opencast-bigbluebutton-integration/post-archive/post_archive.rb"
+          dest: "/usr/local/bigbluebutton/core/scripts/post_archive/post_archive.rb"
+        - src: "/tmp/opencast-bigbluebutton-integration/oc_modules/"
           dest: "/usr/local/bigbluebutton/core/scripts/post_archive/oc_modules/"
     - name: copy files
       ansible.builtin.template:

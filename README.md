@@ -16,6 +16,8 @@ This role assumes that the file `/etc/bigbluebutton/bbb-web.properties` is alrea
 
 ## Role Variables
 
+### Required Variables
+
 There are some required variables to be able to connect to opencast.
 Without them this role will not work.
 They are:
@@ -26,6 +28,14 @@ They are:
 | `bbb_oc_opencast_server` | `https://develop.opencast.org` | The opencast server that ingests the recordings |
 | `bbb_oc_opencast_user` | `admin` | The user that can access opencast  |
 | `bbb_oc_opencast_password` | `your-password` | The password for that user |
+
+### Version Checkout
+
+The role uses the [`ansible.builtin.git`-module](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/git_module.html)
+to download the ruby scripts for the integration from [their repository](https://github.com/elan-ev/opencast-bigbluebutton-integration).
+You can checkout the desired version with the `bbb_oc_version` variable that is directly passed to the module's parameter [`version`](https://docs.ansible.com/ansible/latest/collections/ansible/builtin/git_module.html#parameter-version). The **default** for this variable is `HEAD`.
+
+### Optional Variables
 
 There are further variables you can use to configure the integration.
 For a full overview of all the configuration options have a look at the [defaults](defaults/main.yml)-file.
