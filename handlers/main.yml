@@ -3,10 +3,11 @@
 # 'bundle install' and unlock the Gemfile
 - name: rerun gem bundle installer
   ansible.builtin.command:
-    cmd: |
-      bundle config unset deployment
-      bundle install
+    cmd: "{{ item }}"
     chdir: /usr/local/bigbluebutton/core
+  loop:
+    - bundle config unset --local deployment
+    - bundle install
 
 - name: restart bbb-rap-resque-worker
   ansible.builtin.systemd:
