@@ -1,6 +1,13 @@
 ---
 - name: copy and configure processing files
   block:
+    - name: create oc_modules folder
+      ansible.builtin.file:
+        path: "/usr/local/bigbluebutton/core/scripts/post_archive/oc_modules/"
+        state: directory
+        owner: root
+        group: root
+        mode: "0751"
     - name: copy files
       ansible.builtin.copy:
         remote_src: true
