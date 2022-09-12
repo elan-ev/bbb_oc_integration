@@ -21,6 +21,13 @@
           dest: "/usr/local/bigbluebutton/core/scripts/post_archive/post_archive.rb"
         - src: "/tmp/opencast-bigbluebutton-integration/oc_modules/"
           dest: "/usr/local/bigbluebutton/core/scripts/post_archive/oc_modules/"
+    - name: ensure folder permissions for oc_modules
+      ansible.builtin.file:
+        path: "/usr/local/bigbluebutton/core/scripts/post_archive/oc_modules/"
+        state: directory
+        owner: root
+        group: root
+        mode: "0751"
     - name: copy files
       ansible.builtin.template:
         src: post_archive_config.toml.j2
