@@ -35,6 +35,10 @@
 - name: install post archive scripts
   ansible.builtin.include: post_archive.yml
   when: bbb_oc_workflow == "post-archive"
+  
+- name: install post archive scripts
+  ansible.builtin.include: post_publish.yml
+  when: bbb_oc_workflow == "post-publish"
 
 - name: clean up temp
   ansible.builtin.file:
