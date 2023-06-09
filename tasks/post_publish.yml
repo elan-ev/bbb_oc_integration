@@ -10,6 +10,7 @@
         mode: "0751"
     - name: copy files
       ansible.builtin.copy:
+        remote_src: true
         src: "{{ item.src }}"
         dest: "{{ item.dest }}"
         owner: root
@@ -22,7 +23,7 @@
           dest: "/usr/local/bigbluebutton/core/scripts/post_publish/oc_modules/"
     - name: ensure folder permissions for oc_modules
       ansible.builtin.file:
-        path: "/usr/local/bigbluebutton/core/scripts/post_archive/oc_modules/"
+        path: "/usr/local/bigbluebutton/core/scripts/post_publish/oc_modules/"
         state: directory
         owner: root
         group: root
